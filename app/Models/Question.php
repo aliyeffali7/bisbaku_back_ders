@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Question extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'title',
-        'description',
-        'full_description',
-        'price',
-        'image',
-        'education_document',
-        'contract_document'
+        'exam_id',
     ];
+
+    public function exam()
+    {
+        return $this->belongsTo(Exam::class);
+    }
 }

@@ -20,6 +20,8 @@ class CourseController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'full_description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'education_document' => 'required|mimes:pdf|max:10000',
             'contract_document' => 'required|mimes:pdf|max:10000'
@@ -37,18 +39,20 @@ class CourseController extends Controller
         $course = Course::create([
             'title' => $request->title,
             'description' => $request->description,
+            'full_description' => $request->full_description,
+            'price' => $request->price,
             'image'=> $imagePath,
             'education_document' => $educationDocPath,
             'contract_document' => $contractDocPath
         ]);
 
-        return response()->json([$course->toArray(), 201]); 
+        return response()->json($course->toArray(), 201); 
     }
 
     public function show($id)
     {
         $course = Course::findOrFail($id);
-        return response()->json($course->toArray);
+        return response()->json($course->toArray());
     }
 
     public function update(Request $request, $id)
@@ -58,6 +62,8 @@ class CourseController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
+            'full_description' => 'sometimes|nullable|string',
+            'price' => 'sometimes|required|numeric|min:0',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
             'education_document' => 'sometimes|mimes:pdf|max:10000',
             'contract_document' => 'sometimes|mimes:pdf|max:10000',
@@ -67,32 +73,32 @@ class CourseController extends Controller
             return response()->json(['errors'=> $validator->errors()], 422);
         }
 
-        $data = $request->only(['title', 'description']);
+        $data = $request->only(['title', 'description', 'full_description', 'price']);
 
         if ($request->hasFile('image')) {
             if ($course->image) {
-                Storage::disk('publuc')->delete($course->image);
+                Storage::disk('public')->delete($course->image);
             }
             $data['image'] = $request->file('image')->store('courses/images', 'public');
         }
 
         if ($request->hasFile('education_document')) {
             if ($course->education_document) {
-                Storage::disk('publuc')->delete($course->education_document);
+                Storage::disk('public')->delete($course->education_document);
             }
             $data['education_document'] = $request->file('education_document')->store('courses/documents', 'public');
         }
 
         if ($request->hasFile('contract_document')) {
             if ($course->contract_document) {
-                Storage::disk('publuc')->delete($course->contract_document);
+                Storage::disk('public')->delete($course->contract_document);
             }
             $data['contract_document'] = $request->file('contract_document')->store('courses/documents', 'public');
         }
 
         $course->update($data);
 
-        return response()->json($course->toArray);
+        return response()->json($course->toArray());
     }
 
     public function destroy($id)

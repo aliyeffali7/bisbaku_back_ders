@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
+            $table->longText('full_description')->nullable();
+            $table->decimal('price', 10, 2)->default(0);
             $table->string('image')->nullable();
             $table->string('education_document')->nullable();
             $table->string('contract_document')->nullable();
