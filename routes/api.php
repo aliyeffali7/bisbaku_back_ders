@@ -51,6 +51,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/certificates', [CertificateController::class, 'index']);
     Route::get('/certificates/{id}', [CertificateController::class, 'show']);
+    Route::get('/certificates/{id}/download', [CertificateController::class, 'download']);
+
 });
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {

@@ -6,6 +6,8 @@ use App\Models\Apply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\ApplyStatusNotification;
+
 
 class ApplyController extends Controller
 {
@@ -82,7 +84,7 @@ class ApplyController extends Controller
             return response()->json(['error' => 'Forbidden'], 403);
         }
 
-        $apply = Apply::findOrFail($id);
+        $apply = Apply::with('user', 'course')->findOrFail($id);
 
         $validator = Validator::make($request->all(), [
             'status' => 'in:pending,approved,rejected',
@@ -95,8 +97,14 @@ class ApplyController extends Controller
 
         $apply->update($request->only(['status', 'message']));
 
+        // Отправляем уведомление пользователю
+        if (in_array($apply->status, ['approved', 'rejected'])) {
+            $apply->user->notify(new ApplyStatusNotification($apply));
+        }
+
         return response()->json($apply);
     }
+
 
     /**
      * Удалить заявку (только для админа)
