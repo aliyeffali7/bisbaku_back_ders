@@ -16,6 +16,7 @@ class Course extends Model
         'price',
         'image',
         'education_document',
-        'contract_document'
+        'contract_document',
+        'certificate_image'
     ];
 }

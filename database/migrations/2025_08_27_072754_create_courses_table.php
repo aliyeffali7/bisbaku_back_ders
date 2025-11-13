@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('education_document')->nullable();
             $table->string('contract_document')->nullable();
+            $table->string('certificate_image')->nullable();
             $table->timestamps();
         });
     }
