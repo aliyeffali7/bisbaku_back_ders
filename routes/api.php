@@ -12,6 +12,7 @@ use App\Http\Controllers\ResultController;
 use App\Http\Controllers\ResultQuestionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserUnlockExamController;
+use App\Http\Controllers\CompanyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,8 @@ Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/courses', [CourseController::class,'index']);
 Route::get('/courses/{id}', [CourseController::class,'show']);
+
+Route::get('/branches', [CompanyController::class, 'index']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -90,6 +93,12 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::put('/certificates-admin/{id}', [CertificateController::class, 'update']);
     Route::delete('/certificates-admin/{id}', [CertificateController::class, 'destroy']);
 
+    Route::post('/branches-admin', [CompanyController::class, 'store']);
+    Route::put('/branches-admin/{id}', [CompanyController::class, 'update']);
+    Route::delete('/branches-admin/{id}', [CompanyController::class, 'destroy']);
+
     Route::get('/users', [UserController::class, 'allUsers']);
     Route::get('/user/{id}', [UserController::class, 'findById']);
+
+        Route::post('/register-admin', [RegisterController::class, 'registerAdmin']);
 });

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('phone_number')->unique();
-            $table->string('role')->default('student');
+            $table->string('role');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Exam extends Model
 {
@@ -15,10 +16,21 @@ class Exam extends Model
         'course_id',
         'score',
         'duration_minutes',
+        // ✅ Добавлено
+        'company_id',
     ];
 
-    public function course()
+    public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    /**
+     * Получить компанию, которой принадлежит экзамен.
+     */
+    public function company(): BelongsTo
+    {
+        // Предполагаем, что ваша модель Company называется App\Models\Company
+        return $this->belongsTo(Company::class);
     }
 }

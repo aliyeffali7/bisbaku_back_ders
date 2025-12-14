@@ -16,13 +16,15 @@ class ExamController extends Controller
 
     public function index()
     {
-        $exams = Exam::with('course')->get();
+        // Загружаем курс и компанию
+        $exams = Exam::with(['course', 'company'])->get();
         return response()->json($exams);
     }
 
     public function show($id)
     {
-        $exam = Exam::with('course')->findOrFail($id);
+        // Загружаем курс и компанию
+        $exam = Exam::with(['course', 'company'])->findOrFail($id);
         return response()->json($exam);
     }
 
@@ -34,6 +36,8 @@ class ExamController extends Controller
             'course_id'        => 'required|exists:courses,id',
             'score'            => 'required|integer|min:0',
             'duration_minutes' => 'required|integer|min:1',
+            // ✅ Добавляем валидацию для company_id
+            'company_id'       => 'nullable|exists:companies,id', 
         ]);
 
         if ($validator->fails()) {
@@ -46,6 +50,8 @@ class ExamController extends Controller
             'course_id',
             'score',
             'duration_minutes',
+            // ✅ Добавляем company_id
+            'company_id',
         ]));
 
         return response()->json($exam, 201);
@@ -61,18 +67,22 @@ class ExamController extends Controller
             'course_id'        => 'sometimes|required|exists:courses,id',
             'score'            => 'sometimes|required|integer|min:0',
             'duration_minutes' => 'sometimes|required|integer|min:1',
+            // ✅ Добавляем валидацию для company_id
+            'company_id'       => 'sometimes|nullable|exists:companies,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
+        
+        // ✅ Включаем company_id в список обновляемых полей
         $exam->update($request->only([
             'title',
             'description',
             'course_id',
             'score',
             'duration_minutes',
+            'company_id',
         ]));
 
         return response()->json($exam);
