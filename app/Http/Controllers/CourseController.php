@@ -9,6 +9,18 @@ use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/courses",
+     *     summary="Get all courses",
+     *     tags={"Courses"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of courses",
+     *         @OA\JsonContent(type="array", @OA\Items(type="object"))
+     *     )
+     * )
+     */
     public function index()
     {
         $courses = Course::all();
@@ -60,6 +72,24 @@ class CourseController extends Controller
         return response()->json($course->toArray(), 201); 
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/courses/{id}",
+     *     summary="Get a specific course",
+     *     tags={"Courses"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Course details",
+     *         @OA\JsonContent(type="object")
+     *     )
+     * )
+     */
     public function show($id)
     {
         $course = Course::findOrFail($id);
